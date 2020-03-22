@@ -32,7 +32,7 @@ class Client:
 	ID = -1
 	PrivateKey = -1
 	PublicKey = -1
-	Server = 0
+	ListOfID = {}
 
 	def addToServer(self):
 		self.Server.addClient(self.ID, self.PublicKey)
@@ -42,8 +42,10 @@ class Client:
 		key = generateKey()
 		self.PublicKey = key.publickey()
 		self.PrivateKey = key
-		self.Server = Server
-		self.addToServer()
+
+	def addID(self, client, clientID):
+		print (client, clientID)
+		self.ListOfID[client] = clientID
 
 class TSAserver:
 	ID = -1
