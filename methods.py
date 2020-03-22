@@ -19,7 +19,7 @@ def checkIntegrity(hashed_string, s):
 	return False
 
 def encrypt(s, key):
-	pass
+	key.encrypt(s, 32)
 
 def decrypt(s, key):
 	pass
