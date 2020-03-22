@@ -19,10 +19,10 @@ def checkIntegrity(hashed_string, s):
 	return False
 
 def encrypt(s, key):
-	key.encrypt(s, 32)
+	return str(key.encrypt(s, 32))
 
 def decrypt(s, key):
-	pass
+	return str(key.decrypt(s))
 
 def generateKey():
 	random_generator = Random.new().read
