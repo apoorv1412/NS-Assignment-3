@@ -21,7 +21,7 @@ listOfID['B'] = B_ID
 PrivateKey = key
 PublicKey = key.publickey()
 
-port1 = 4999
+port1 = 4997
 port2 = 7000
 
 #####################################################################################
@@ -45,6 +45,10 @@ s.connect(('127.0.0.1', port))
 
 print ('From A to TSA')
 s.send(str.encode(message))
+
+new_message = s.recv(1024)
+print(new_message)
+
 s.close()
 
 
