@@ -3,7 +3,7 @@ import methods
 import socket
 import datetime
 
-port1 = 7007
+port1 = 7008
 
 key = []
 A_ID = -1
