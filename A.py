@@ -28,8 +28,8 @@ listOfID['B'] = B_ID
 PrivateKey = key[0]
 PublicKey = key[1]
 
-port1 = 5009
-port2 = 7008
+port1 = 4009
+port2 = 3009
 
 #####################################################################################
 
@@ -61,6 +61,7 @@ try:
 			time = -1
 except:
 	time = -1
+
 
 if time == -1:
 	while True:
