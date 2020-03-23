@@ -35,7 +35,7 @@ PublicKey = key[1]
 
 PrivateKey, PublicKey = PublicKey, PrivateKey
 
-port1 = 5009
+port1 = 4009
 '''
 Communication between A and TSA
 '''	
@@ -50,7 +50,7 @@ while True:
 	print ('Connected to A')
 	hashed_file_from_A = c.recv(2048).decode() 
 	time = datetime.datetime.now()
-	expiry = time + datetime.timedelta(0,30)
+	expiry = time + datetime.timedelta(0,300)
 
 	message = hashed_file_from_A + "||" + str(A_ID) + "||" + str(time) + "||"
 	message += str(expiry) + "||" + str(B_key[0]) + "||" + str(PublicKey)
