@@ -52,8 +52,7 @@ while True:
 	time = datetime.datetime.now()
 	expiry = time + datetime.timedelta(0,300)
 
-	message = hashed_file_from_A + "||" + str(A_ID) + "||" + str(time) + "||"
-	message += str(expiry) + "||" + str(B_key[0]) + "||" + str(PublicKey)
+	message = hashed_file_from_A + "||" + str(A_ID) + "||" + str(time) + "||" + str(expiry)
 
 	# print("message",message)
 
@@ -65,16 +64,16 @@ while True:
 	# hash_to_be_sent = str.encode(hash_to_be_sent)
 	encrypted_hash_to_be_sent = methods.encrypt(hash_to_be_sent, PrivateKey)
 	# print(type(encrypted_hash_to_be_sent))
-	# # encrypted_hash_to_be_sent = str.encode(encrypted_hash_to_be_sent)
-	# # encrypted_hash_to_be_sent = key.encrypt(hash_to_be_sent, 32)
+	# encrypted_hash_to_be_sent = str.encode(encrypted_hash_to_be_sent)
+	# encrypted_hash_to_be_sent = key.encrypt(hash_to_be_sent, 32)
 
 	# byte_message = str.encode(encrypted_hash_to_be_sent+"||"+message)
 	# byte_message += listOfPublicKeys[B_ID].exportKey("PEM") + str.encode("||") 
 	# byte_message += PublicKey.exportKey("PEM")
 
 	# print(byte_message)
-	# # print("---------")
-	# # print(PublicKey.exportKey("PEM"))
+	# print("---------")
+	# print(PublicKey.exportKey("PEM"))
 
 	c.send(str.encode(encrypted_hash_to_be_sent+"||"+message))
 s.close()
