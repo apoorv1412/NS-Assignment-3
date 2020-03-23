@@ -7,12 +7,16 @@ port1 = 3009
 
 key = []
 A_ID = -1
+TSA_ID = -1
+Public_Key_TSA = -1
+Public_Key_A = -1
+
 
 with open('initialsetup.pkl', 'rb') as input:
-	pickle.load(input)
-	pickle.load(input)
+	TSA_ID = pickle.load(input)
+	Public_Key_TSA = pickle.load(input)[0]
 	A_ID = int(pickle.load(input))
-	pickle.load(input)
+	Public_Key_A = pickle.load(input)[0]
 	B_ID = int(pickle.load(input))
 	key = pickle.load(input)
 
@@ -39,19 +43,17 @@ while True:
 	hashed_file = splitted_message[2]
 	time = splitted_message[5]
 	expiry = splitted_message[6]
-	# B_Public_Key = int(splitted_message[7])
-	TSA_key = int(splitted_message[8])
 
 	time_now = datetime.datetime.now();
 
 	decrypted_certificate = ""
 
-	for i in range(2,8):
+	for i in range(2,6):
 		decrypted_certificate += splitted_message[i] + "||"
 
-	decrypted_certificate += splitted_message[8]
+	decrypted_certificate += splitted_message[6]
 
-	if methods.decrypt(encrypted_certificate, TSA_key) != methods.hash_string(decrypted_certificate):
+	if methods.decrypt(encrypted_certificate, Public_Key_TSA) != methods.hash_string(decrypted_certificate):
 		print("Invalid Certificate")
 		continue
 	file = methods.decrypt(encrypted_file, key[1])
