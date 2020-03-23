@@ -1,8 +1,9 @@
 import pickle
 import methods
 import socket
+import datetime
 
-port1 = 7005
+port1 = 7007
 
 key = []
 A_ID = -1
@@ -41,6 +42,8 @@ while True:
 	# B_Public_Key = int(splitted_message[7])
 	TSA_key = int(splitted_message[8])
 
+	time_now = datetime.datetime.now();
+
 	decrypted_certificate = ""
 
 	for i in range(2,8):
@@ -55,6 +58,14 @@ while True:
 	if hashed_file != methods.hash_string(file):
 		print("File Incorrect")
 		continue
+
+	if datetime.datetime.strptime(expiry, '%Y-%m-%d %H:%M:%S.%f') < time_now:
+		print("Expiry Certificate")
+		continue
+	else:
+		print("Expiry Time", datetime.datetime.strptime(expiry, '%Y-%m-%d %H:%M:%S.%f'))
+		print("Current Time", time_now)
+
 	print(file)
 s.close()
 
