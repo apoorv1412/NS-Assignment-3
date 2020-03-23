@@ -15,16 +15,20 @@ key = -1
 PrivateKey = -1
 PublicKey = -1
 listOfID = {}
+TSA_ID = -1
+B_ID = -1
+PublicKey_B = -1
+PublicKey_TSA = -1
 
 with open('initialsetup.pkl', 'rb') as input:
-	pickle.load(input)
-	pickle.load(input)
+	ID_TSA = pickle.load(input)
+	PublicKey_TSA = pickle.load(input)[0]
 	ID = int(pickle.load(input))
 	key = pickle.load(input)
 	B_ID = int(pickle.load(input))
-	pickle.load(input) 
+	PublicKey_B = pickle.load(input)[0]
 
-listOfID['B'] = B_ID
+
 PrivateKey = key[0]
 PublicKey = key[1]
 
@@ -43,7 +47,7 @@ for line in f:
 	file += line
 
 hashed_file = methods.hash_string(file)
-message = hashed_file + '||' + str(listOfID['B'])
+message = hashed_file + '||' + str(B_ID)
 
 
 
@@ -84,21 +88,19 @@ if time == -1:
 		hashed_file = splitted_message[1]
 		time = splitted_message[4]
 		expiry = splitted_message[5]
-		B_Public_Key = int(splitted_message[6])
-		TSA_key = int(splitted_message[7])
 
 		message_to_be_checked = ""
-		for i in range(1, 7):
+		for i in range(1, 5):
 			message_to_be_checked += splitted_message[i] + "||"
 
-		message_to_be_checked += splitted_message[7]
+		message_to_be_checked += splitted_message[5]
 
 
-		decrypted_hash = methods.decrypt(encrypted_hash, TSA_key)
+		decrypted_hash = methods.decrypt(encrypted_hash, PublicKey_TSA)
 		s.close()
 
 
-		if decrypted_hash==methods.hash_string(message_to_be_checked):
+		if decrypted_hash == methods.hash_string(message_to_be_checked):
 			break
 
 else:
@@ -107,14 +109,13 @@ else:
 	hashed_file = splitted_message[1]
 	time = splitted_message[4]
 	expiry = splitted_message[5]
-	B_Public_Key = int(splitted_message[6])
-	TSA_key = int(splitted_message[7])
 
 	message_to_be_checked = ""
-	for i in range(1, 7):
+	for i in range(1, 5):
 		message_to_be_checked += splitted_message[i] + "||"
-	message_to_be_checked += splitted_message[7]
-	decrypted_hash = methods.decrypt(encrypted_hash, TSA_key)
+
+	message_to_be_checked += splitted_message[5]
+	decrypted_hash = methods.decrypt(encrypted_hash, PublicKey_TSA)
 
 	if decrypted_hash != methods.hash_string(message_to_be_checked):
 		print("Integrity Failed")
@@ -153,7 +154,7 @@ s = socket.socket()
 port = port2 
 s.connect(('127.0.0.1', port))
 # time_now = datetime.datetime.now()
-encrypted_file = methods.encrypt(file, B_Public_Key)
+encrypted_file = methods.encrypt(file, PublicKey_B)
 message = encrypted_file + "||" + message_from_tsa
 # message = 'from A to B' + '||' + str(time_now)
 s.send(str.encode(message))
