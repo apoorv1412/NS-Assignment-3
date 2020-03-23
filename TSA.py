@@ -35,7 +35,7 @@ PublicKey = key[1]
 
 PrivateKey, PublicKey = PublicKey, PrivateKey
 
-port1 = 5003
+port1 = 5009
 '''
 Communication between A and TSA
 '''	
