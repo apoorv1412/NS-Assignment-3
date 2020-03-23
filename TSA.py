@@ -17,19 +17,25 @@ PublicKey = -1
 listOfPublicKeys = {}
 
 with open('initialsetup.pkl', 'rb') as input:
-	ID = pickle.load(input)
+	ID = int(pickle.load(input))
 	key = pickle.load(input)
-	A_ID = pickle.load(input) 
+	A_ID = int(pickle.load(input))
 	A_key = pickle.load(input)
-	B_ID = pickle.load(input) 
-	B_key = pickle.load(input) 
+	B_ID = int(pickle.load(input))
+	B_key = pickle.load(input)
 
-listOfPublicKeys[A_ID] = A_key.publickey()
-listOfPublicKeys[B_ID] = B_key.publickey()
-PrivateKey = key
-PublicKey = key.publickey()
+# print(key)
+# print(A_key)
+# print(B_key)
 
-port1 = 4996
+listOfPublicKeys[A_ID] = A_key[0]
+listOfPublicKeys[B_ID] = B_key[0]
+PrivateKey = key[0]
+PublicKey = key[1]
+
+PrivateKey, PublicKey = PublicKey, PrivateKey
+
+port1 = 5003
 '''
 Communication between A and TSA
 '''	
@@ -39,32 +45,38 @@ s.bind(('', port))
 s.listen()      
 print ("socket is listening")      
 
-c, addr = s.accept()      
-print ('Connected to A')
-hashed_file_from_A = c.recv(2048).decode() 
-time = datetime.datetime.now()
-expiry = time + datetime.timedelta(0,30)
+while True:
+	c, addr = s.accept()      
+	print ('Connected to A')
+	hashed_file_from_A = c.recv(2048).decode() 
+	time = datetime.datetime.now()
+	expiry = time + datetime.timedelta(0,30)
 
-message = hashed_file_from_A + "||" + str(A_ID) + "||" + str(time) + "||"
-message += str(expiry) + "||"
+	message = hashed_file_from_A + "||" + str(A_ID) + "||" + str(time) + "||"
+	message += str(expiry) + "||" + str(B_key[0]) + "||" + str(PublicKey)
 
-print(message)
+	# print("message",message)
 
-hash_to_be_sent = methods.hash_string(message)
-encrypted_hash_to_be_sent = methods.encrypt(hash_to_be_sent, key)
-# encrypted_hash_to_be_sent = key.encrypt(hash_to_be_sent, 32)
+	# print(message,"---")
 
-byte_message = str.encode(encrypted_hash_to_be_sent+"||"+message)
-byte_message += listOfPublicKeys[B_ID].exportKey("PEM") + str.encode("||") 
-byte_message += PublicKey.exportKey("PEM")
+	hash_to_be_sent = methods.hash_string(message)
 
-# print("---------")
-# print(PublicKey.exportKey("PEM"))
+	# print(hash_to_be_sent)
+	# hash_to_be_sent = str.encode(hash_to_be_sent)
+	encrypted_hash_to_be_sent = methods.encrypt(hash_to_be_sent, PrivateKey)
+	# print(type(encrypted_hash_to_be_sent))
+	# # encrypted_hash_to_be_sent = str.encode(encrypted_hash_to_be_sent)
+	# # encrypted_hash_to_be_sent = key.encrypt(hash_to_be_sent, 32)
 
+	# byte_message = str.encode(encrypted_hash_to_be_sent+"||"+message)
+	# byte_message += listOfPublicKeys[B_ID].exportKey("PEM") + str.encode("||") 
+	# byte_message += PublicKey.exportKey("PEM")
 
-c.send(byte_message)
+	# print(byte_message)
+	# # print("---------")
+	# # print(PublicKey.exportKey("PEM"))
 
-
-
-
+	c.send(str.encode(encrypted_hash_to_be_sent+"||"+message))
 s.close()
+
+
